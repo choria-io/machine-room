@@ -2,7 +2,7 @@
 weight = 5
 +++
 
-# Overview
+## Overview
 
 This is a tool that allows automation backplanes to be built that are specifically tailored to the needs of managed SaaS
 software vendors.
@@ -24,6 +24,65 @@ Using this a SaaS can go from zero to code running safely in a customer environm
 allowing you to focus on your core business needs.
 
 A single customer "site" can scale to 10s of thousands of nodes, and we support complex topologies and orchestration.
+
+## Example
+
+An example speaks volumes, the code below is a complete setup of a Machine Room agent:
+
+```golang
+func main() {
+	app, err := machineroom.New(machineroom.Options{
+		Name:    "acme-manager",
+		Version: "0.0.1",
+		Contact: "info@example.net",
+		Help:    "Acme Manager", 
+		MachineSigningKey: "b217b9c7574.....3522da5c3b82",
+	})
+	panicIfError(err)
+
+	panicIfError(app.Run(context.Background()))
+}
+```
+
+This code, when deployed to a customer, will:
+
+ * Read a SaaS-issued JWT holding provisioning information
+ * Connect to the provisioning network and enroll with the SaaS
+ * Restart into provisioned state:
+   * Start a local Choria Broker
+   * Create a number of local spool streams
+   * Set up Stream Replicator to copy data between customer and SaaS
+   * Regularly publish server metadata, configuration and life-cycle events
+   * Download Autonomous Agents from the SaaS and health check them continuously
+
+From this point any autonomous agent actions can be used to manage software on the nodes.  The SaaS can upgrade and
+downgrade customer sites at will.
+
+If the customer site is offline desired state remains in the customer side and events are spooled.  Once the customer
+is back in on-line the events will spool back to the SaaS.
+
+Here's output from the above `main.go`:
+
+```nohighlight
+[root@managed /]# acme-manager
+usage: acme-manager [<flags>] <command> [<args> ...]
+
+Acme Manager
+
+Commands:
+  run    Runs the management agent
+  reset  Restores the agent to factory defaults
+
+Pass --help to see global flags applicable to this command.
+```
+
+And this is the agent running on a node:
+
+```nohighlight
+[root@managed /]# ps -auxw
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.2  0.1 2312836 45360 ?       Ssl  12:35   0:21 /usr/bin/acme-manager run --config /etc/acme-manager/agent.cfg
+```
 
 ## Status
 
