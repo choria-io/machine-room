@@ -1,0 +1,39 @@
+name: build_tasks
+description: Choria Build Tasks
+
+commands:
+    - name: dependencies
+      type: parent
+      description: Manage dependencies
+      aliases: [d]
+      commands:
+        - name: update
+          description: Update dependencies
+          type: exec
+          aliases: [up]
+          dir: "{{ AppDir }}"
+          flags:
+            - name: verbose
+              description: Log verbosely
+              short: v
+              bool: true
+            - name: proxy
+              description: Enable using go proxy
+              bool: true
+              default: "true"
+          script: |
+            . "{{ BashHelperPath }}"
+            
+            ab_announce Updating all dependencies
+            echo
+            
+            {{ if eq .Flags.proxy false }}  
+            export GOPROXY=direct
+            ab_say Disabling go mod proxy
+            {{ end }}
+
+            go get -u -n -a -t {{- if .Flags.verbose }} -d -x {{ end }} ./...
+
+            ab_say Running go mod tidy
+            
+            go mod tidy
