@@ -7,10 +7,10 @@ weight = 5
 This is a tool that allows automation backplanes to be built that are specifically tailored to the needs of managed SaaS
 software vendors.
 
-If you are a vendor who wish to build a SaaS that allows your software to be installed and managed on private, customer 
-owned, infrastructure.
-
 ![Overview](/machine-room-overview.png)
+
+Vendors who wish to build a SaaS offerings that allow their software to be installed and managed on private, customer owned, infrastructure
+can use this to build the client-side software agent quickly and easily.
 
 This tool takes care of:
 
@@ -32,10 +32,12 @@ An example speaks volumes, the code below is a complete setup of a Machine Room 
 ```golang
 func main() {
 	app, err := machineroom.New(machineroom.Options{
-		Name:    "acme-manager",
+		Name:    "example-manager",
 		Version: "0.0.1",
 		Contact: "info@example.net",
-		Help:    "Acme Manager", 
+		Help:    "Example Manager", 
+		
+		// SaaS identity that verifies all plugins, ota updates and more
 		MachineSigningKey: "b217b9c7574.....3522da5c3b82",
 	})
 	panicIfError(err)
@@ -64,8 +66,8 @@ is back in on-line the events will spool back to the SaaS.
 Here's output from the above `main.go`:
 
 ```nohighlight
-[root@managed /]# acme-manager
-usage: acme-manager [<flags>] <command> [<args> ...]
+[root@managed /]# example-manager
+usage: example-manager [<flags>] <command> [<args> ...]
 
 Acme Manager
 
@@ -81,7 +83,7 @@ And this is the agent running on a node:
 ```nohighlight
 [root@managed /]# ps -auxw
 USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root           1  0.2  0.1 2312836 45360 ?       Ssl  12:35   0:21 /usr/bin/acme-manager run --config /etc/acme-manager/agent.cfg
+root           1  0.2  0.1 2312836 45360 ?       Ssl  12:35   0:21 /usr/bin/example-manager
 ```
 
 ## Status
