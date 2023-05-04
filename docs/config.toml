@@ -1,0 +1,45 @@
+baseURL = 'https://choria-io.github.io/machine-room/'
+languageCode = 'en-us'
+title = 'Choria Machine Room'
+theme = "hugo-theme-relearn"
+canonifyURLs = true
+themeVariant = "my-custom-variant"
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+[params]
+author = "Choria Project"
+disableLanguageSwitchingButton = true
+themeVariant = "choria-relearn"
+disableInlineCopyToClipBoard = true
+alwaysopen = true
+showVisitedLinks = false
+disableLandingPageButton = true
+
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-fw fa-github'></i> GitHub"
+identifier = "ds"
+url = "https://github.com/choria-io/machine-room"
+weight = 10
+
+[[menu.shortcuts]]
+name = "<i class='far fa-save'></i> Download"
+url = "https://github.com/choria-io/machine-room/releases"
+weight = 11
+
+[[menu.shortcuts]]
+name = "<i class='far fa-comments'></i> Discussions"
+url = "https://github.com/choria-io/machine-room/discussions"
+weight = 12
+
+[[menu.shortcuts]]
+name = "<i class='far fa-life-ring'></i> Issues"
+url = "https://github.com/choria-io/machine-room/issues"
+weight = 13
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-slack'></i> #choria"
+url = "https://slack.puppet.com/"
+weight = 14
