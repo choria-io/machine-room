@@ -86,18 +86,24 @@ func (b *broker) StartReplication(ctx context.Context, wg *sync.WaitGroup) error
 			TargetRemoveString: "choria.machine.",
 			TargetPrefix:       "machine_room.events.machine.",
 		},
-		{
-			Name:             "KV_CONFIG",
-			Stream:           "KV_CONFIG",
-			TargetStream:     "KV_CONFIG",
-			TargetURL:        "nats://localhost:9222",
-			TargetProcess:    b.broker,
-			TargetChoriaConn: cc,
-			NoTargetCreate:   true,
-			Ephemeral:        true, // copy the entire thing each time we start to be sure we have the latest config
-			SourceURL:        backendUrl,
-		},
 	}
+
+	cfgRepl := &srcfg.Stream{
+		Name:             "KV_CONFIG",
+		Stream:           "KV_CONFIG",
+		TargetStream:     "KV_CONFIG",
+		TargetURL:        "nats://localhost:9222",
+		TargetProcess:    b.broker,
+		TargetChoriaConn: cc,
+		NoTargetCreate:   true,
+		Ephemeral:        true, // copy the entire thing each time we start to be sure we have the latest config
+		SourceURL:        backendUrl,
+	}
+	if b.opts.ConfigBucketPrefix != "" {
+		cfgRepl.TargetRemoveString = b.opts.ConfigBucketPrefix
+		cfgRepl.FilterSubject = fmt.Sprintf("$KV.CONFIG.%s.>", b.opts.ConfigBucketPrefix)
+	}
+	rcfg.Streams = append(rcfg.Streams, cfgRepl)
 
 	err := rcfg.Validate()
 	if err != nil {

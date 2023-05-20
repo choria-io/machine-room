@@ -74,6 +74,8 @@ type RuntimeOptions interface {
 	NatsCredentialsFile() string
 	// StartTime is the time this instance was started
 	StartTime() time.Time
+	// ConfigBucketPrefix will replicate only a subset of keys from the backend to the site
+	ConfigBucketPrefix() string
 }
 
 // FactsGenerator gathers facts

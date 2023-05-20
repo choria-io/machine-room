@@ -37,6 +37,7 @@ type broker struct {
 	bi     *build.Info
 	fw     *choria.Framework
 	log    *logrus.Entry
+	opts   *Options
 	broker *network.Server
 }
 
@@ -48,8 +49,9 @@ func newBroker(opts *Options, configFile string, bi *build.Info, log *logrus.Ent
 	var err error
 
 	instance := &broker{
-		bi:  bi,
-		log: log.WithField("machine_room", "broker"),
+		bi:   bi,
+		opts: opts,
+		log:  log.WithField("machine_room", "broker"),
 	}
 
 	instance.cfg, err = config.NewSystemConfig(configFile, true)
