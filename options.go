@@ -73,6 +73,7 @@ func (o roOptions) StorageDirectory() string            { return o.opts.ServerSt
 func (o roOptions) NatsNeySeedFile() string             { return o.opts.NatsNeySeedFile }
 func (o roOptions) NatsCredentialsFile() string         { return o.opts.NatsCredentialsFile }
 func (o roOptions) StartTime() time.Time                { return o.opts.StartTime }
+func (o roOptions) ConfigBucketPrefix() string          { return o.opts.ConfigBucketPrefix }
 
 func (o *Options) roCopy() *roOptions {
 	return &roOptions{*o}
@@ -93,10 +94,12 @@ type Options struct {
 
 	// optional below
 
-	// Plugins are additional plugins like autonomous agents to add to the build
-	Plugins map[string]plugin.Pluggable `json:"-"`
 	// FactsRefreshInterval sets an interval to refresh facts on, 10 minutes by default and cannot be less than 1 minute
 	FactsRefreshInterval time.Duration `json:"facts_refresh_interval"`
+	// ConfigBucketPrefix will replicate only a subset of keys from the backend to the site
+	ConfigBucketPrefix string `json:"config_bucket_prefix"`
+	// Plugins are additional plugins like autonomous agents to add to the build
+	Plugins map[string]plugin.Pluggable `json:"-"`
 	// AdditionalFacts will be called during fact generation and the result will be shallow merged with the standard facts
 	AdditionalFacts FactsGenerator `json:"-"`
 	// ReadyFunc is an optional function that will be called once provisioning completes and system is fully initialized
