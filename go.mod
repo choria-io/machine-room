@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/choria-io/fisk v0.6.1
-	github.com/choria-io/go-choria v0.27.1-0.20231204110732-a84fef8cbf96
+	github.com/choria-io/go-choria v0.27.1-0.20231204170245-efda165efc54
 	github.com/choria-io/stream-replicator v0.8.3-0.20230503130504-86152f798aec
 	github.com/choria-io/tokens v0.0.3
 	github.com/ghodss/yaml v1.0.0
@@ -25,7 +25,6 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/achanda/go-sysctl v0.0.0-20160222034550-6be7678c45d2 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/antonmedv/expr v1.15.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -76,7 +75,7 @@ require (
 	github.com/moby/sys/mountinfo v0.7.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/nats-io/jsm.go v0.1.1-0.20231020115352-7a5f8d21a5bc // indirect
+	github.com/nats-io/jsm.go v0.1.1-0.20231204140718-1ad3bcd9702c // indirect
 	github.com/nats-io/nats-server/v2 v2.10.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/oleiade/reflections v1.0.1 // indirect
