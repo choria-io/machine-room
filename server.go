@@ -228,7 +228,7 @@ func (s *server) createServerNKey() error {
 
 func (s *server) provisionConfig(f string, bi *build.Info) (*config.Config, error) {
 	if !choria.FileExist(bi.ProvisionJWTFile()) {
-		return nil, fmt.Errorf("provisioming token not found in %s", bi.ProvisionJWTFile())
+		return nil, fmt.Errorf("provisioning token not found in %s", bi.ProvisionJWTFile())
 	}
 
 	err := s.createServerNKey()

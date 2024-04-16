@@ -74,6 +74,8 @@ func (o roOptions) NatsNeySeedFile() string             { return o.opts.NatsNeyS
 func (o roOptions) NatsCredentialsFile() string         { return o.opts.NatsCredentialsFile }
 func (o roOptions) StartTime() time.Time                { return o.opts.StartTime }
 func (o roOptions) ConfigBucketPrefix() string          { return o.opts.ConfigBucketPrefix }
+func (o roOptions) CustomArgsEnabled() bool             { return o.opts.CustomArgsEnabled }
+func (o roOptions) CustomArgs() []string                { return o.opts.CustomArgs }
 
 func (o *Options) roCopy() *roOptions {
 	return &roOptions{*o}
@@ -120,6 +122,10 @@ type Options struct {
 	NoHostFacts bool `json:"no_host_facts,omitempty"`
 	// NoNetworkFacts disables built-in network interface facts gathering
 	NoNetworkFacts bool `json:"no_network_facts,omitempty"`
+
+	// os.Args opt-out https://github.com/choria-io/machine-room/issues/8
+	CustomArgsEnabled bool     `json:"-"`
+	CustomArgs        []string `json:"-"`
 
 	// Read only below...
 
