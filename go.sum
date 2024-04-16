@@ -39,8 +39,8 @@ github.com/cheekybits/genny v1.0.0 h1:uGGa4nei+j20rOSeDeP5Of12XVm7TGUd4dJA9RDitf
 github.com/cheekybits/genny v1.0.0/go.mod h1:+tQajlRqAUrPI7DOSpB0XAqZYtQakVtB7wXkRAgjxjQ=
 github.com/choria-io/fisk v0.6.2 h1:Vfvpcv8SD53FHW5cT4u7LStpz/wThwRPQHU7mzv1kMI=
 github.com/choria-io/fisk v0.6.2/go.mod h1:PajiUZTAotE5zO18eU6UexuPLLv565WOma4dB0ObxRM=
-github.com/choria-io/go-choria v0.28.1-0.20240416144938-9dbdc4af1db7 h1:U1nlAJPLMMsckP6tNQmbvxVVD/LcqFT+gSBy684l420=
-github.com/choria-io/go-choria v0.28.1-0.20240416144938-9dbdc4af1db7/go.mod h1:XLEKGqo1Xmvj69DrSdI0neDGveWJDDQTeHdZgf1zxsI=
+github.com/choria-io/go-choria v0.28.1-0.20240416190746-b3bf9c7d5a45 h1:B76eu8PMXr3mAhQl8y7NSsb1/4KCKX4bEDTsKWh7/CQ=
+github.com/choria-io/go-choria v0.28.1-0.20240416190746-b3bf9c7d5a45/go.mod h1:XLEKGqo1Xmvj69DrSdI0neDGveWJDDQTeHdZgf1zxsI=
 github.com/choria-io/go-updater v0.1.0 h1:+Pt2ifsDh478T/ldA8fnDwavvH3RTQNn1mkrabVZ5eg=
 github.com/choria-io/go-updater v0.1.0/go.mod h1:8qj3lwYUC6c0zqsvaKP4pNu8GMHbIr5WGrd5YUWByWw=
 github.com/choria-io/stream-replicator v0.8.3-0.20230503130504-86152f798aec h1:jGTkaDf2kDAlho4Oi6r2x51kzjXpxqhECFTHzTZ/a3w=
