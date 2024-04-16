@@ -57,7 +57,11 @@ func (c *cliInstance) Application() *fisk.Application {
 func (c *cliInstance) Run(ctx context.Context) error {
 	c.ctx, c.cancel = context.WithCancel(ctx)
 
-	c.cli.MustParseWithUsage(os.Args[1:])
+	args := os.Args[1:]
+	if c.opts.CustomArgsEnabled {
+		args = c.opts.CustomArgs
+	}
+	c.cli.MustParseWithUsage(args)
 
 	return nil
 }
