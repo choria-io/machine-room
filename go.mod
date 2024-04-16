@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/choria-io/fisk v0.6.2
-	github.com/choria-io/go-choria v0.28.1-0.20240416144938-9dbdc4af1db7
+	github.com/choria-io/go-choria v0.28.1-0.20240416190746-b3bf9c7d5a45
 	github.com/choria-io/stream-replicator v0.8.3-0.20230503130504-86152f798aec
 	github.com/choria-io/tokens v0.0.4-0.20240316144214-a929d9325d48
 	github.com/ghodss/yaml v1.0.0

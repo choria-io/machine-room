@@ -11,6 +11,7 @@ import (
 	"github.com/choria-io/go-choria/aagent/data/machinedata"
 	archivewatcher "github.com/choria-io/go-choria/aagent/watchers/archivewatcher"
 	"github.com/choria-io/go-choria/aagent/watchers/execwatcher"
+	"github.com/choria-io/go-choria/aagent/watchers/expressionwatcher"
 	"github.com/choria-io/go-choria/aagent/watchers/filewatcher"
 	"github.com/choria-io/go-choria/aagent/watchers/kvwatcher"
 	"github.com/choria-io/go-choria/aagent/watchers/metricwatcher"
@@ -33,6 +34,7 @@ var (
 		"agent_provider_golang":   golangrpc.ChoriaPlugin(),
 		"watcher_archive":         archivewatcher.ChoriaPlugin(),
 		"watcher_exec":            execwatcher.ChoriaPlugin(),
+		"watcher_expression":      expressionwatcher.ChoriaPlugin(),
 		"watcher_file":            filewatcher.ChoriaPlugin(),
 		"watcher_kv":              kvwatcher.ChoriaPlugin(),
 		"watcher_metric":          metricwatcher.ChoriaPlugin(),
