@@ -58,8 +58,8 @@ func (c *cliInstance) Run(ctx context.Context) error {
 	c.ctx, c.cancel = context.WithCancel(ctx)
 
 	args := os.Args[1:]
-	if c.opts.CustomArgsEnabled {
-		args = c.opts.CustomArgs
+	if c.opts.Args != nil {
+		args = c.opts.Args
 	}
 	c.cli.MustParseWithUsage(args)
 

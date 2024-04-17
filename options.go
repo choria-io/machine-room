@@ -74,8 +74,7 @@ func (o roOptions) NatsNeySeedFile() string             { return o.opts.NatsNeyS
 func (o roOptions) NatsCredentialsFile() string         { return o.opts.NatsCredentialsFile }
 func (o roOptions) StartTime() time.Time                { return o.opts.StartTime }
 func (o roOptions) ConfigBucketPrefix() string          { return o.opts.ConfigBucketPrefix }
-func (o roOptions) CustomArgsEnabled() bool             { return o.opts.CustomArgsEnabled }
-func (o roOptions) CustomArgs() []string                { return o.opts.CustomArgs }
+func (o roOptions) Args() []string                      { return o.opts.Args }
 
 func (o *Options) roCopy() *roOptions {
 	return &roOptions{*o}
@@ -106,6 +105,8 @@ type Options struct {
 	AdditionalFacts FactsGenerator `json:"-"`
 	// ReadyFunc is an optional function that will be called once provisioning completes and system is fully initialized
 	ReadyFunc ReadyFunc `json:"-"`
+	// Args are parsed instead of os.Args if Args is not nil
+	Args []string `json:"-"`
 
 	// facts related opt-outs
 	// NoStandardFacts disables gathering all standard facts
@@ -122,10 +123,6 @@ type Options struct {
 	NoHostFacts bool `json:"no_host_facts,omitempty"`
 	// NoNetworkFacts disables built-in network interface facts gathering
 	NoNetworkFacts bool `json:"no_network_facts,omitempty"`
-
-	// os.Args opt-out https://github.com/choria-io/machine-room/issues/8
-	CustomArgsEnabled bool     `json:"-"`
-	CustomArgs        []string `json:"-"`
 
 	// Read only below...
 
