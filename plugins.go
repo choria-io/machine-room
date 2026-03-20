@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/choria-io/go-choria/aagent/data/machinedata"
 	archivewatcher "github.com/choria-io/go-choria/aagent/watchers/archivewatcher"
 	"github.com/choria-io/go-choria/aagent/watchers/execwatcher"
@@ -23,15 +25,17 @@ import (
 	golangrpc "github.com/choria-io/go-choria/providers/agent/mcorpc/golang"
 	provisioner "github.com/choria-io/go-choria/providers/agent/mcorpc/golang/provision"
 	"github.com/choria-io/go-choria/providers/data/golang/choriadata"
+	scout "github.com/choria-io/go-choria/scout/agent/scout"
 	"github.com/choria-io/go-choria/scout/data/scoutdata"
-	"github.com/choria-io/machine-room/internal/autoagents/machinesmanager"
-	"github.com/sirupsen/logrus"
+	machinesmanager "github.com/choria-io/machine-room/internal/autoagents/machinesmanager"
 )
 
 var (
 	defaultPlugins = map[string]plugin.Pluggable{
-		"choria_provision":        provisioner.ChoriaPlugin(),
-		"agent_provider_golang":   golangrpc.ChoriaPlugin(),
+		"agent_provider_golang":  golangrpc.ChoriaPlugin(),
+		"agent_choria_provision": provisioner.ChoriaPlugin(),
+		"agent_scout":            scout.ChoriaPlugin(),
+
 		"watcher_archive":         archivewatcher.ChoriaPlugin(),
 		"watcher_exec":            execwatcher.ChoriaPlugin(),
 		"watcher_expression":      expressionwatcher.ChoriaPlugin(),
@@ -42,10 +46,11 @@ var (
 		"watcher_plugins":         pluginswatcher.ChoriaPlugin(),
 		"watcher_schedule":        schedulewatcher.ChoriaPlugin(),
 		"watcher_timer":           timerwatcher.ChoriaPlugin(),
-		"machine_plugins_manager": machines_manager.ChoriaPlugin(),
-		"data_choria":             choriadata.ChoriaPlugin(),
-		"data_machine":            machinedata.ChoriaPlugin(),
-		"data_scout":              scoutdata.ChoriaPlugin(),
+		"machine_plugins_manager": machinesmanager.ChoriaPlugin(),
+
+		"data_choria":  choriadata.ChoriaPlugin(),
+		"data_machine": machinedata.ChoriaPlugin(),
+		"data_scout":   scoutdata.ChoriaPlugin(),
 	}
 
 	mu     sync.Mutex
