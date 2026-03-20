@@ -1,22 +1,24 @@
-{{- $context := .context }}
-{{- $content := .content }}
-{{- $title := .title | default (T "Expand-title") }}
+{{- $page := .page }}
+{{- if and (not $page) .context }}
+  {{- $page = .context }}
+  {{- $filepath := "[virtual file]" }}{{ with and $page $page.File $page.File.Filename }}{{ $filepath = . }}{{ end }}
+  {{- warnf "%q: DEPRECATED parameter 'context' for shortcode 'expand' found, use 'page' instead; see https://mcshelby.github.io/hugo-theme-relearn/introduction/releasenotes/5/#5-18-0" $filepath }}
+{{- end }}
+{{- $title := .title | default (T "Details") }}
 {{- $title = trim $title " " }}
-{{- $expanded := .open | default false }}
+{{- $expanded := .expanded | default false }}
+{{- if and (isset . "open") (or (ne (printf "%T" .open) "string") (ne (trim .open " " ) "")) }}
+  {{- $filepath := "[virtual file]" }}{{ with and $page $page.File $page.File.Filename }}{{ $filepath = . }}{{ end }}
+  {{- warnf "%q: DEPRECATED parameter 'open' for shortcode 'expand' found, use 'expanded' instead; see https://mcshelby.github.io/hugo-theme-relearn/introduction/releasenotes/6/#6-3-0" $filepath }}
+  {{- $expanded = .open }}
+{{- end }}
 {{- if eq (printf "%T" $expanded) "string" }}
 	{{- $expanded = (eq $expanded "true") }}
 {{- end }}
-{{- $id := cond (or (eq .id nil) (eq .id "")) (partial "make-random-md5.hugo") .id }}
-{{- with $context }}
-<div class="expand">
-    <input type="checkbox" id="expand-{{ $id }}" aria-controls="expandcontent-{{ $id }}" {{ if $expanded }} checked{{ end }}>
-    <label class="expand-label" for="expand-{{ $id }}" >
-        <i class="fas fa-chevron-down"></i>
-        <i class="fas fa-chevron-right"></i>
-        {{ $title | markdownify }}
-    </label>
-    <div id="expandcontent-{{ $id }}" class="expand-content">
-{{ $content | safeHTML }}
-    </div>
-</div>
-{{- end }}
+{{- partial "shortcodes/notice.html" (dict
+  "page"     .page
+  "content"  .content
+  "expanded" $expanded
+  "style"    "transparent"
+  "title"    $title
+) }}
