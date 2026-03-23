@@ -32,9 +32,9 @@ import (
 
 var (
 	defaultPlugins = map[string]plugin.Pluggable{
-		"agent_provider_golang":  golangrpc.ChoriaPlugin(),
-		"agent_choria_provision": provisioner.ChoriaPlugin(),
-		"agent_scout":            scout.ChoriaPlugin(),
+		"agent_provider_golang": golangrpc.ChoriaPlugin(),
+		"choria_provision":      provisioner.ChoriaPlugin(),
+		"scout":                 scout.ChoriaPlugin(),
 
 		"watcher_archive":         archivewatcher.ChoriaPlugin(),
 		"watcher_exec":            execwatcher.ChoriaPlugin(),
