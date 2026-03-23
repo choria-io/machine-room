@@ -33,7 +33,7 @@ func (c *cliInstance) resetCommand(_ *fisk.ParseContext) error {
 		}
 
 		if !ok {
-			fmt.Println("Cancelling reset operation")
+			fmt.Println("Canceling reset operation")
 			return nil
 		}
 	}

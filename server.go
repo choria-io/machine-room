@@ -24,12 +24,11 @@ import (
 )
 
 type server struct {
-	cfg    *config.Config
-	bi     *build.Info
-	fw     *choria.Framework
-	opts   *Options
-	inproc nats.InProcessConnProvider
-	log    *logrus.Entry
+	cfg  *config.Config
+	bi   *build.Info
+	fw   *choria.Framework
+	opts *Options
+	log  *logrus.Entry
 }
 
 func newServer(opts *Options, configFile string, inproc nats.InProcessConnProvider, log *logrus.Entry) (*server, error) {
