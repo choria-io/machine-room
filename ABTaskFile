@@ -2,51 +2,186 @@ name: build_tasks
 description: Choria Build Tasks
 
 commands:
-  - name: docs
-    type: parent
-    description: Documentation related commands
-    commands:
-      - name: serve
-        description: Serves documentation locally
-        type: exec
-        flags:
-          - name: port
-            description: The port to listen on
-            default: "8081"
-        command: hugo serve -p {{ .Flags.port }} -s docs
+    - name: build
+      type: parent
+      description: Build binaries
+      aliases:
+        - b
+      commands:
+        - name: binary
+          description: Build a basic test binary
+          type: exec
+          dir: "{{ AppDir }}"
+          aliases: [bin]
+          banner: |
+            >>>
+            >>> Building 'ccm' locally
+            >>>
+            >>>               Target: {{ if .Flags.target }}{{ .Flags.target }}{{else}}host{{end}}
+            >>>
+          flags:
+            - name: target
+              description: Target platform to build for
+              enum: ["linux/amd64", "linux/arm64", "windows/amd64"]
+              short: T
+            - name: verbose
+              description: Logs packages being build
+              bool: true
+              short: v
+          script: |
+            set -e
 
-  - name: dependencies
-    type: parent
-    description: Manage dependencies
-    aliases: [d]
-    commands:
-      - name: update
-        description: Update dependencies
-        type: exec
-        aliases: [up]
-        dir: "{{ AppDir }}"
-        flags:
-          - name: verbose
-            description: Log verbosely
-            short: v
-            bool: true
-          - name: proxy
-            description: Enable using go proxy
-            bool: true
-            default: "true"
-        script: |
-          . "{{ BashHelperPath }}"
-          
-          ab_announce Updating all dependencies
-          echo
-          
-          {{ if eq .Flags.proxy false }}  
-          export GOPROXY=direct
-          ab_say Disabling go mod proxy
-          {{ end }}
+            . "{{ BashHelperPath }}"
 
-          go get -u -n -a -t {{- if .Flags.verbose }} -d -x {{ end }} ./...
+            {{ if eq .Flags.target "linux/amd64" }}
+                export GOOS=linux
+                export GOARCH=amd64
+            {{ else if eq .Flags.target "linux/arm64" }}
+                export GOOS=linux
+                export GOARCH=arm64
+            {{ else if eq .Flags.target "windows/amd64" }}
+                export GOOS=windows
+                export GOARCH=amd64
+            {{ end }}
 
-          ab_say Running go mod tidy
-          
-          go mod tidy
+            {{ if .Flags.verbose }}
+            ab_say Packages being build
+            {{ end }}
+
+            go build -o machine-room  \
+              {{ if .Flags.verbose }}-v{{ end }} \
+              .
+
+            ab_say Build completed
+
+            echo
+            ls -lh machine-room
+            echo
+            file machine-room
+            echo
+
+    - name: dependencies
+      type: parent
+      description: Manage dependencies
+      aliases: [d]
+      commands:
+        - name: update
+          description: Update dependencies
+          type: exec
+          aliases: [up]
+          dir: "{{ AppDir }}"
+          flags:
+            - name: verbose
+              description: Log verbosely
+              short: v
+              bool: true
+            - name: proxy
+              description: Enable using go proxy
+              bool: true
+              default: "true"
+          script: |
+            . "{{ BashHelperPath }}"
+
+            ab_announce Updating all dependencies
+            echo
+
+            {{ if eq .Flags.proxy false }}
+            export GOPROXY=direct
+            ab_say Disabling go mod proxy
+            {{ end }}
+
+            go get -u -n -a -t {{- if .Flags.verbose }} -d -x {{ end }} ./...
+
+            ab_say Running go mod tidy
+
+            go mod tidy
+
+    - name: test
+      type: parent
+      aliases: [t]
+      description: Perform various tests
+      commands:
+        - name: unit
+          type: exec
+          description: Run ginkgo unit tests
+          aliases: [u]
+          dir: "{{ AppDir }}"
+          arguments:
+            - name: dir
+              description: Directory to test
+              default: .
+          flags:
+            - name: update
+              description: Updates the ginkgo runtime
+              bool: true
+          script: |
+            set -e
+
+            . "{{ BashHelperPath }}"
+
+            {{ if .Flags.update }}
+                  ab_say Updating ginkgo binary
+                  go install github.com/onsi/ginkgo/v2/ginkgo
+            {{ end }}
+
+            ginkgo -r --skip Integration {{ .Arguments.dir | escape }}
+
+        - name: lint
+          type: exec
+          dir: "{{ AppDir }}"
+          flags:
+            - name: vet
+              description: Perform go vet
+              bool: true
+              default: true
+            - name: staticcheck
+              description: Perform staticcheck
+              bool: true
+              default: true
+            - name: update
+              description: Updates lint dependencies
+              bool: true
+          script: |
+            set -e
+
+            . "{{ BashHelperPath }}"
+
+            {{ if .Flags.update }}
+              ab_say Updating linting tools
+              go install github.com/client9/misspell/cmd/misspell@latest
+              go install honnef.co/go/tools/cmd/staticcheck@latest
+            {{ else }}
+              echo ">>> Run with --update to install required commands"
+              echo
+            {{ end }}
+
+            ab_say Formatting source files
+            go fmt ./...
+
+            ab_say Tidying go mod
+            go mod tidy
+
+            ab_say Checking spelling
+            find . -type f -name "*.go" | xargs misspell -error -locale US
+            find docs/content -type f  | xargs misspell -error -locale US
+
+            {{ if .Flags.vet }}
+            ab_say Performing go vet
+            go vet ./...
+            {{ end }}
+
+            {{ if .Flags.staticcheck }}
+            ab_say Running staticcheck
+            staticcheck ./...
+            {{ end }}
+
+    - name: docs
+      type: parent
+      description: Documentation management
+      aliases: [doc]
+      commands:
+        - name: serve
+          description: Serve docs locally
+          type: exec
+          dir: "{{ AppDir }}/docs"
+          command: hugo serve
