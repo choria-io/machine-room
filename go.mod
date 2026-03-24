@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/choria-io/ccm v0.0.21-0.20260323121159-003c6b538da2
-	github.com/choria-io/fisk v0.7.2
+	github.com/choria-io/fisk v0.8.0
 	github.com/choria-io/go-choria v0.29.5-0.20260314142501-c8c8fcd47584
 	github.com/choria-io/stream-replicator v0.9.0
 	github.com/choria-io/tokens v0.0.4-0.20250903080437-7d289cbf3db9
@@ -71,7 +71,7 @@ require (
 	github.com/lestrrat-go/jwx/v3 v3.0.13 // indirect
 	github.com/lestrrat-go/option/v2 v2.0.0 // indirect
 	github.com/looplab/fsm v1.0.3 // indirect
-	github.com/lufia/plan9stats v0.0.0-20260216142805-b3301c5f2a88 // indirect
+	github.com/lufia/plan9stats v0.0.0-20260324052639-156f7da3f749 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect

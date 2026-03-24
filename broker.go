@@ -83,6 +83,7 @@ func newBroker(opts *Options, configFile string, bi *build.Info, log *logrus.Ent
 	instance.cfg.Choria.NetworkLeaderElectionReplicas = 1
 	instance.cfg.Choria.NetworkMachineStoreReplicas = 1
 	instance.cfg.Choria.NetworkStreamAdvisoryReplicas = 1
+	instance.cfg.Choria.NetworkExecutorStoreDuration = 0 // we create a broader submission stream
 
 	// always be running jetstream
 	instance.cfg.Choria.NetworkStreamStore = opts.ServerStorageDirectory
