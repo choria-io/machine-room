@@ -32,6 +32,7 @@ func (c *cliInstance) runCommand(pc *fisk.ParseContext) error {
 		}
 
 		c.isLeader = cfg.Option(configKeyRole, "follower") == "leader"
+		c.opts.Identity = cfg.Identity
 	}
 
 	c.log = c.log.WithFields(logrus.Fields{"leader": c.isLeader})

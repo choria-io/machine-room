@@ -1,0 +1,38 @@
+input:
+  nats_jetstream:
+    urls: [nats://backend:s3cret@saas-nats.backend.saas.local:4222]
+    subject: "machine_room.nodes.>"
+    durable: "RPK"
+    stream: MACHINE_ROOM_NODES
+    deliver: all
+
+pipeline:
+  processors:
+    - try:
+        - jq:
+            output_raw: true
+            query: '.data|fromjson|.zcontent|@base64d'
+
+        - decompress:
+            algorithm: gzip
+
+    - catch:
+        - mapping: |
+            root.error = error()
+
+output:
+  mongodb:
+    url: "mongodb://mongo.backend.saas.local"
+    database: "machineroom"
+    username: mr
+    password: s3cret
+    app_name: benthos
+    collection: nodes
+    operation: replace-one
+    upsert: true
+    filter_map: |-
+      root.hostname = this.facts.host.info.hostname
+    document_map: |-
+      root.hostname = this.facts.host.info.hostname
+      root.timestamp = this.facts.machine_room.timestamp
+      root.node = this
