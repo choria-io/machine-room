@@ -49,7 +49,7 @@ func newServer(opts *Options, configFile string, inproc nats.InProcessConnProvid
 	srv.bi.SetProvisionFacts(opts.FactsFile)
 	build.Version = opts.Version // TODO: wrap in bi
 
-	hasRequiredFiles := choria.FileExist(configFile) && choria.FileExist(opts.ServerJWTFile) && choria.FileExist(opts.ServerSeedFile) && choria.FileExist(opts.NatsNeySeedFile)
+	hasRequiredFiles := choria.FileExist(configFile) && choria.FileExist(opts.ServerJWTFile) && choria.FileExist(opts.ServerSeedFile) && choria.FileExist(opts.NatsNkeySeedFile)
 
 	switch {
 	case hasRequiredFiles:
@@ -83,9 +83,10 @@ func newServer(opts *Options, configFile string, inproc nats.InProcessConnProvid
 			// some settings we need to not forget in provisioning helper
 			srv.cfg.Choria.UseSRVRecords = false
 			srv.cfg.RegisterInterval = 300
-			srv.cfg.RegistrationSplay = true
+			srv.cfg.RegistrationSplay = false
 			srv.cfg.FactSourceFile = opts.FactsFile
 			srv.cfg.Choria.InventoryContentRegistrationTarget = "choria.broadcast.agent.registration"
+			srv.cfg.Choria.InventoryContentCompression = true
 			srv.cfg.Registration = []string{"inventory_content"}
 			srv.cfg.Collectives = []string{"choria"}
 			srv.cfg.MainCollective = "choria"
@@ -188,7 +189,7 @@ func (s *server) saveCredentials() error {
 		return nil
 	}
 
-	nkBytes, err := os.ReadFile(s.opts.NatsNeySeedFile)
+	nkBytes, err := os.ReadFile(s.opts.NatsNkeySeedFile)
 	if err != nil {
 		return err
 	}
@@ -202,10 +203,10 @@ func (s *server) saveCredentials() error {
 }
 
 func (s *server) createServerNKey() error {
-	if s.opts.NatsNeySeedFile == "" {
+	if s.opts.NatsNkeySeedFile == "" {
 		return fmt.Errorf("no nkey seed configured")
 	}
-	if choria.FileExist(s.opts.NatsNeySeedFile) {
+	if choria.FileExist(s.opts.NatsNkeySeedFile) {
 		return nil
 	}
 
@@ -217,7 +218,7 @@ func (s *server) createServerNKey() error {
 	if err != nil {
 		return fmt.Errorf("could not generate user nkey: %v", err)
 	}
-	err = os.WriteFile(s.opts.NatsNeySeedFile, ukps, 0600)
+	err = os.WriteFile(s.opts.NatsNkeySeedFile, ukps, 0600)
 	if err != nil {
 		return fmt.Errorf("could not generate user nkey: %v", err)
 	}

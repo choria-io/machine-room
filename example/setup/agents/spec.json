@@ -1,0 +1,9 @@
+[
+  {
+    "name": "echo",
+    "source": "http://plugins.backend.saas.local/echo-0.0.1.tgz",
+    "verify": "SHA256SUMS",
+    "verify_checksum": "90d31a4ff899ac7afc14ed9a765607f83b685747f47e2c43f4d5a3c3fec28c5f",
+    "checksum": "6ef5988ac77c195e7dc6dd8d20e88945aef039d50b1f7ebad389686487dffe65"
+  }
+]
