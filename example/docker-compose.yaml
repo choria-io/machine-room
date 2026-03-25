@@ -1,0 +1,156 @@
+services:
+  # configures all the services with config files in volumes
+  setup:
+    hostname: setup.backend.saas.local
+    image: registry.choria.io/choria/choria:latest
+    entrypoint: /setup/setup.sh
+    user: root
+    volumes:
+      - ./setup/:/setup
+      - issuer:/configuration/issuer
+      - provisioner:/configuration/provisioner
+      - broker:/configuration/broker
+      - customer-tools:/configuration/customer/tools
+      - customer-nats1:/configuration/customer/nats1
+      - customer-nats2:/configuration/customer/nats2
+      - customer-nats3:/configuration/customer/nats3
+      - saas-nats:/configuration/saas-nats
+
+  shell:
+    hostname: shell.backend.saas.local
+    image: registry.choria.io/choria/choria:latest
+    user: root
+    working_dir: /machine-room
+    entrypoint: /bin/bash
+    tty: true
+    environment:
+      - NATS_URL=saas-nats.backend.saas.local
+    volumes:
+      - issuer:/machine-room/issuer
+      - provisioner:/machine-room/provisioner
+      - broker:/machine-room/broker
+      - customer-tools:/machine-room/customer/tools
+      - customer-nats1:/machine-room/customer/nats1
+      - customer-nats2:/machine-room/customer/nats2
+      - customer-nats3:/machine-room/customer/nats3
+      - saas-nats:/machine-room/nats
+
+
+  # serves up autonomous agents over http
+  plugins:
+    hostname: plugins.backend.saas.local
+    image: httpd:latest
+    dns_search: backend.saas.local
+    volumes:
+      - ./setup/agents:/usr/local/apache2/htdocs/
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # choria broker where provisioning happens
+  provision-borker:
+    hostname: provision-broker.backend.saas.local
+    image: registry.choria.io/choria/choria:latest
+    dns_search: backend.saas.local
+    command: broker run --config /etc/choria/broker.conf
+    volumes:
+      - broker:/etc/choria
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # choria provisioner used to onboard customers
+  provisioner:
+    hostname: provisioner.backend.saas.local
+    image: registry.choria.io/choria/provisioner:latest
+    dns_search: backend.saas.local
+    command: --config /etc/choria-provisioner/provisioner.yaml --choria-config /etc/choria-provisioner/choria.cfg
+    volumes:
+      - provisioner:/etc/choria-provisioner
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # NATS JetStream server that represents the SaaS Backend
+  saas-nats:
+    hostname: saas-nats.backend.saas.local
+    image: synadia/nats-server:nightly
+    dns_search: backend.saas.local
+    command: --config /machine-room/server.conf
+    environment:
+      NATS_USER: backend
+      NATS_PASSWORD: s3cret
+    volumes:
+      - saas-nats:/machine-room
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # Configures a few streams once the SaaS JetStream is up
+  saas-stream-setup:
+    image: synadia/nats-server:nightly
+    dns_search: backend.saas.local
+    entrypoint: /machine-room/create.sh
+    volumes:
+      - saas-nats:/machine-room
+    depends_on:
+      - saas-nats
+
+  # A customer running our example agent
+  customer-tools:
+    hostname: tools.managed.example.net
+    user: root
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
+      - customer-tools:/etc/saas-manager/
+    build:
+      context: agent
+      dockerfile: Dockerfile
+
+  customer-nats1:
+    hostname: nats1.managed.example.net
+    user: root
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
+      - customer-nats1:/etc/saas-manager/
+    build:
+      context: agent
+      dockerfile: Dockerfile
+
+  customer-nats2:
+    hostname: nats2.managed.example.net
+    user: root
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
+      - customer-nats2:/etc/saas-manager/
+    build:
+      context: agent
+      dockerfile: Dockerfile
+
+  customer-nats3:
+    hostname: nats3.managed.example.net
+    user: root
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    volumes:
+      - customer-nats3:/etc/saas-manager/
+    build:
+      context: agent
+      dockerfile: Dockerfile
+
+volumes:
+  issuer:
+  provisioner:
+  broker:
+  customer-tools:
+  customer-nats1:
+  customer-nats2:
+  customer-nats3:
+  saas-nats:

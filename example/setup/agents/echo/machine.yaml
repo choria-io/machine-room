@@ -1,0 +1,24 @@
+name: echo
+version: 0.0.1
+initial_state: INITIAL
+
+transitions:
+  - name: enter_maintenance
+    destination: MAINTENANCE
+    from:
+      - INITIAL
+
+  - name: resume
+    destination: INITIAL
+    from:
+      - MAINTENANCE
+
+watchers:
+  - name: echo
+    type: exec
+    interval: 30s
+    state_match:
+      - INITIAL
+    properties:
+      timeout: 1m
+      command: /bin/echo hello

@@ -84,7 +84,7 @@ func machineRoomFactProvider(opts Options, log *logrus.Entry) model.FactProvider
 			}
 		}
 
-		if choria.FileExist(opts.NatsNeySeedFile) {
+		if choria.FileExist(opts.NatsNkeySeedFile) {
 			pubNKey, err = loadNkeyPublic(opts)
 			if err != nil {
 				log.Warnf("Could not read nkey: %v", err)
@@ -117,7 +117,7 @@ func machineRoomFactProvider(opts Options, log *logrus.Entry) model.FactProvider
 }
 
 func loadNkeyPublic(opts Options) (string, error) {
-	seed, err := os.ReadFile(opts.NatsNeySeedFile)
+	seed, err := os.ReadFile(opts.NatsNkeySeedFile)
 	if err != nil {
 		return "", err
 	}

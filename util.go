@@ -42,7 +42,7 @@ func (c *cliInstance) CommonConfigure() (RuntimeOptions, *logrus.Entry, error) {
 	c.opts.ProvisioningJWTFile = filepath.Join(c.opts.ConfigurationDirectory, defaultProvisioningTokenFile)
 	c.opts.FactsFile = filepath.Join(c.opts.ConfigurationDirectory, defaultFactsFile)
 	c.opts.ServerStorageDirectory = defaultStorageDirectory
-	c.opts.NatsNeySeedFile = filepath.Join(c.opts.ConfigurationDirectory, defaultNatsNkeyFile)
+	c.opts.NatsNkeySeedFile = filepath.Join(c.opts.ConfigurationDirectory, defaultNatsNkeyFile)
 	c.opts.NatsCredentialsFile = filepath.Join(c.opts.ConfigurationDirectory, defaultNatsCredentialFile)
 
 	build.ProvisionJWTFile = c.opts.ProvisioningJWTFile
@@ -162,10 +162,10 @@ func (c *cliInstance) interruptWatcher() {
 }
 
 func (c *cliInstance) createServerNKey() error {
-	if c.opts.NatsNeySeedFile == "" {
+	if c.opts.NatsNkeySeedFile == "" {
 		return fmt.Errorf("no nkey seed configured")
 	}
-	if choria.FileExist(c.opts.NatsNeySeedFile) {
+	if choria.FileExist(c.opts.NatsNkeySeedFile) {
 		return nil
 	}
 
@@ -177,7 +177,7 @@ func (c *cliInstance) createServerNKey() error {
 	if err != nil {
 		return fmt.Errorf("could not generate user nkey: %v", err)
 	}
-	err = os.WriteFile(c.opts.NatsNeySeedFile, ukps, 0400)
+	err = os.WriteFile(c.opts.NatsNkeySeedFile, ukps, 0400)
 	if err != nil {
 		return fmt.Errorf("could not generate user nkey: %v", err)
 	}

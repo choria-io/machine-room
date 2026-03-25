@@ -70,7 +70,7 @@ func (o roOptions) StatusFile() string                  { return o.opts.ServerSt
 func (o roOptions) SubmissionDirectory() string         { return o.opts.ServerSubmissionDirectory }
 func (o roOptions) SubmissionSpoolSize() int            { return o.opts.ServerSubmissionSpoolSize }
 func (o roOptions) StorageDirectory() string            { return o.opts.ServerStorageDirectory }
-func (o roOptions) NatsNeySeedFile() string             { return o.opts.NatsNeySeedFile }
+func (o roOptions) NatsNeySeedFile() string             { return o.opts.NatsNkeySeedFile }
 func (o roOptions) NatsCredentialsFile() string         { return o.opts.NatsCredentialsFile }
 func (o roOptions) StartTime() time.Time                { return o.opts.StartTime }
 func (o roOptions) ConfigBucketPrefix() string          { return o.opts.ConfigBucketPrefix }
@@ -148,8 +148,8 @@ type Options struct {
 	CommandPath string `json:"command_path"`
 	// ServerStorageDirectory the directory where state is stored (RO)
 	ServerStorageDirectory string `json:"server_storage_directory"`
-	// NatsNeySeedFile is a path to a nkey seed created at start
-	NatsNeySeedFile string `json:"nats_ney_seed_file"`
+	// NatsNkeySeedFile is a path to a nkey seed created at start
+	NatsNkeySeedFile string `json:"nats_nkey_seed_file"`
 	// NatsCredentialsFile is a path to the nats credentials file holding data received during provisioning
 	NatsCredentialsFile string `json:"nats_credentials_file"`
 	// StartTime the time the process started (RO)
