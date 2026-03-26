@@ -154,4 +154,6 @@ type Options struct {
 	NatsCredentialsFile string `json:"nats_credentials_file"`
 	// StartTime the time the process started (RO)
 	StartTime time.Time `json:"start_time"`
+	// Identity is the identity of the machine room agent
+	Identity string `json:"identity"`
 }

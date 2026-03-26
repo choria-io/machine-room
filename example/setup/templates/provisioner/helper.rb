@@ -64,22 +64,15 @@ end
 
 def set_config!(request, reply)
   # stub data the helper will fetch from the saas
-  customers = {
-        "one" => {
-            :brokers => "nats://tools.managed.example.net:9222", # whoever is the leader for this site
-            :site => "customer_one",
-            :source => {
-                :host => "nats://cust_one:s3cret@saas-nats.backend.saas.local",
-            }
-        }
-    }
-
+  customers = JSON.parse(File.read("/etc/choria-provisioner/customers.json"))
 
   customer = request["jwt"]["extensions"]["customer"]
   role = request["jwt"]["extensions"]["role"]
-  brokers = customers[customer][:brokers]
-  source = customers[customer][:source]
-  leader = customers[customer][:leader]
+
+  raise "Customer %s not found" % customer unless customers[customer]
+
+  brokers = customers[customer]["brokers"]
+  source = customers[customer]["source"]
 
   reply["configuration"].merge!(
     "identity" => request["identity"],
@@ -91,11 +84,11 @@ def set_config!(request, reply)
     "plugin.security.provider" => "choria",
     "plugin.security.choria.token_file" => File.join(request["ed25519_pubkey"]["directory"], "server.jwt"),
     "plugin.security.choria.seed_file" => File.join(request["ed25519_pubkey"]["directory"], "server.seed"),
-    "machine_room.site" => customers[customer][:site],
+    "machine_room.site" => customers[customer]["site"],
   )
 
   if role == "tools"
-    reply["configuration"]["machine_room.source.host"] = source[:host]
+    reply["configuration"]["machine_room.source.host"] = source["host"]
     reply["configuration"]["machine_room.role"] = "leader"
   else
     reply["configuration"]["machine_room.role"] = "follower"

@@ -184,3 +184,16 @@ func (c *cliInstance) createServerNKey() error {
 
 	return nil
 }
+
+// FileExist checks if a file exist on disk
+func FileExist(path string) bool {
+	if path == "" {
+		return false
+	}
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}

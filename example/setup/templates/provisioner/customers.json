@@ -1,0 +1,9 @@
+{
+  "one": {
+    "brokers": "nats://tools.managed.example.net:9222",
+    "site": "customer_one",
+    "source": {
+      "host": "nats://cust_one:s3cret@saas-nats.backend.saas.local"
+    }
+  }
+}

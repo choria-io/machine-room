@@ -3,7 +3,7 @@ module github.com/choria-io/machine-room/example/agent
 go 1.26.1
 
 require (
-	github.com/choria-io/machine-room v0.0.0-20260324105944-a9ff1f18bcfd
+	github.com/choria-io/machine-room v0.0.0-20260325110517-85c0264179f2
 	github.com/sirupsen/logrus v1.9.4
 )
 
@@ -25,7 +25,7 @@ require (
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/choria-io/ccm v0.0.21-0.20260323121159-003c6b538da2 // indirect
 	github.com/choria-io/fisk v0.8.0 // indirect
-	github.com/choria-io/go-choria v0.29.5-0.20260314142501-c8c8fcd47584 // indirect
+	github.com/choria-io/go-choria v0.29.5-0.20260325094417-67e6728d9102 // indirect
 	github.com/choria-io/go-updater v0.1.0 // indirect
 	github.com/choria-io/scaffold v0.0.10 // indirect
 	github.com/choria-io/stream-replicator v0.9.0 // indirect
@@ -83,9 +83,9 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nats-io/jsm.go v0.3.1-0.20260310145507-9ed2a8f88ec5 // indirect
+	github.com/nats-io/jsm.go v0.3.1-0.20260311160413-8208434e7b0d // indirect
 	github.com/nats-io/jwt/v2 v2.8.1 // indirect
-	github.com/nats-io/nats-server/v2 v2.12.5 // indirect
+	github.com/nats-io/nats-server/v2 v2.12.6 // indirect
 	github.com/nats-io/nats.go v1.49.0 // indirect
 	github.com/nats-io/nkeys v0.4.15 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect

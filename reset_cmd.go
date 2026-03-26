@@ -39,49 +39,64 @@ func (c *cliInstance) resetCommand(_ *fisk.ParseContext) error {
 	}
 
 	log.Warnf("Removing state storage directory %s", opts.ServerStorageDirectory)
-	err = os.RemoveAll(opts.ServerStorageDirectory)
-	if err != nil {
-		log.Errorf("Could not remove storage directory: %v", err)
+	if FileExist(opts.ServerStorageDirectory) {
+		err = os.RemoveAll(opts.ServerStorageDirectory)
+		if err != nil {
+			log.Errorf("Could not remove storage directory: %v", err)
+		}
 	}
 
 	log.Warnf("Removing autonomous agent store %s", opts.MachinesDirectory)
-	err = os.RemoveAll(opts.MachinesDirectory)
-	if err != nil {
-		log.Errorf("Could not remove autonomous agent store: %v", err)
+	if !FileExist(opts.MachinesDirectory) {
+		err = os.RemoveAll(opts.MachinesDirectory)
+		if err != nil {
+			log.Errorf("Could not remove autonomous agent store: %v", err)
+		}
 	}
 
 	log.Warnf("Removing instance facts file %s", opts.FactsFile)
-	err = os.Remove(opts.FactsFile)
-	if err != nil {
-		log.Warnf("Could not remove facts file: %v", err)
+	if !FileExist(opts.FactsFile) {
+		err = os.Remove(opts.FactsFile)
+		if err != nil {
+			log.Warnf("Could not remove facts file: %v", err)
+		}
 	}
 
 	log.Warnf("Removing JWT file %s", opts.ServerJWTFile)
-	err = os.Remove(opts.ServerJWTFile)
-	if err != nil {
-		log.Errorf("Could not remove jwt file: %v", err)
+	if !FileExist(opts.ServerJWTFile) {
+		err = os.Remove(opts.ServerJWTFile)
+		if err != nil {
+			log.Errorf("Could not remove jwt file: %v", err)
+		}
 	}
 
 	log.Warnf("Removing Seed file %s", opts.ServerJWTFile)
-	err = os.Remove(opts.ServerSeedFile)
-	if err != nil {
-		log.Errorf("Could not remove seed file: %v", err)
+	if !FileExist(opts.ServerSeedFile) {
+		err = os.Remove(opts.ServerSeedFile)
+		if err != nil {
+			log.Errorf("Could not remove seed file: %v", err)
+		}
 	}
+
 	if opts.ConfigurationDirectory != "" {
 		for _, f := range []string{defaultCaFile, defaultCertFile, defaultKeyFile, defaultNatsNkeyFile, defaultNatsCredentialFile} {
 			path := filepath.Join(opts.ConfigurationDirectory, f)
-			log.Warnf("Removing x509 file %v", path)
-			err = os.Remove(path)
-			if err != nil {
-				log.Errorf("Could not remove %s: %v", f, err)
+			if !FileExist(path) {
+				log.Warnf("Removing x509 file %v", path)
+				err = os.Remove(path)
+				if err != nil {
+					log.Errorf("Could not remove %s: %v", f, err)
+				}
 			}
 		}
 	}
 
 	log.Warnf("Removing configuration file %v", c.cfgFile)
-	err = os.Remove(c.cfgFile)
-	if err != nil {
-		log.Warnf("Could not remove configuration file: %v", err)
+	if !FileExist(c.cfgFile) {
+		err = os.Remove(c.cfgFile)
+		if err != nil {
+			log.Warnf("Could not remove configuration file: %v", err)
+		}
 	}
 
 	return nil

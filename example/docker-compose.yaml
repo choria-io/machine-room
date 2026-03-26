@@ -11,10 +11,11 @@ services:
       - provisioner:/configuration/provisioner
       - broker:/configuration/broker
       - customer-tools:/configuration/customer/tools
-      - customer-nats1:/configuration/customer/nats1
-      - customer-nats2:/configuration/customer/nats2
-      - customer-nats3:/configuration/customer/nats3
+      - customer-app1:/configuration/customer/app1
+      - customer-app2:/configuration/customer/app2
+      - customer-app3:/configuration/customer/app3
       - saas-nats:/configuration/saas-nats
+      - redpanda:/configuration/redpanda
 
   shell:
     hostname: shell.backend.saas.local
@@ -30,10 +31,11 @@ services:
       - provisioner:/machine-room/provisioner
       - broker:/machine-room/broker
       - customer-tools:/machine-room/customer/tools
-      - customer-nats1:/machine-room/customer/nats1
-      - customer-nats2:/machine-room/customer/nats2
-      - customer-nats3:/machine-room/customer/nats3
+      - customer-app1:/machine-room/customer/app1
+      - customer-app2:/machine-room/customer/app2
+      - customer-app3:/machine-room/customer/app3
       - saas-nats:/machine-room/nats
+      - redpanda:/machine-room/redpanda
 
 
   # serves up autonomous agents over http
@@ -43,30 +45,6 @@ services:
     dns_search: backend.saas.local
     volumes:
       - ./setup/agents:/usr/local/apache2/htdocs/
-    depends_on:
-      setup:
-        condition: service_completed_successfully
-
-  # choria broker where provisioning happens
-  provision-borker:
-    hostname: provision-broker.backend.saas.local
-    image: registry.choria.io/choria/choria:latest
-    dns_search: backend.saas.local
-    command: broker run --config /etc/choria/broker.conf
-    volumes:
-      - broker:/etc/choria
-    depends_on:
-      setup:
-        condition: service_completed_successfully
-
-  # choria provisioner used to onboard customers
-  provisioner:
-    hostname: provisioner.backend.saas.local
-    image: registry.choria.io/choria/provisioner:latest
-    dns_search: backend.saas.local
-    command: --config /etc/choria-provisioner/provisioner.yaml --choria-config /etc/choria-provisioner/choria.cfg
-    volumes:
-      - provisioner:/etc/choria-provisioner
     depends_on:
       setup:
         condition: service_completed_successfully
@@ -94,53 +72,118 @@ services:
     volumes:
       - saas-nats:/machine-room
     depends_on:
-      - saas-nats
+      saas-nats:
+        condition: service_started
+
+  # MongoDB to host node database and other state
+  mongo:
+    image: mongo
+    hostname: mongo.backend.saas.local
+    dns_search: backend.saas.local
+    restart: always
+    command: --quiet
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mr
+      MONGO_INITDB_ROOT_PASSWORD: s3cret
+      MONGO_INITDB_DATABASE: machineroom
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  redpanda-connect-nodes:
+    image: docker.redpanda.com/redpandadata/connect
+    hostname: redpanda-connect.backend.saas.local
+    dns_search: backend.saas.local
+    volumes:
+      - redpanda:/etc/redpanda
+    command: run /etc/redpanda/nodes.yaml
+    depends_on:
+      saas-stream-setup:
+        condition: service_completed_successfully
+
+  dashboard:
+    hostname: dashboard.managed.example.net
+    user: root
+    depends_on:
+      mongo:
+        condition: service_started
+    environment:
+      MONGO_URI: mongodb://mr:s3cret@mongo:27017
+    ports:
+      - 8080:8080
+    build:
+      context: dashboard
+      dockerfile: Dockerfile
+
+  # choria broker where provisioning happens
+  provision-borker:
+    hostname: provision-broker.backend.saas.local
+    image: registry.choria.io/choria/choria:latest
+    dns_search: backend.saas.local
+    command: broker run --config /etc/choria/broker.conf
+    volumes:
+      - broker:/etc/choria
+    depends_on:
+      saas-stream-setup:
+        condition: service_completed_successfully
+
+  # choria provisioner used to onboard customers
+  provisioner:
+    hostname: provisioner.backend.saas.local
+    image: registry.choria.io/choria/provisioner:latest
+    dns_search: backend.saas.local
+    command: --config /etc/choria-provisioner/provisioner.yaml --choria-config /etc/choria-provisioner/choria.cfg
+    volumes:
+      - provisioner:/etc/choria-provisioner
+    depends_on:
+      provision-borker:
+        condition: service_started
 
   # A customer running our example agent
   customer-tools:
     hostname: tools.managed.example.net
     user: root
     depends_on:
-      setup:
-        condition: service_completed_successfully
+      provision-borker:
+        condition: service_started
     volumes:
       - customer-tools:/etc/saas-manager/
     build:
       context: agent
       dockerfile: Dockerfile
 
-  customer-nats1:
-    hostname: nats1.managed.example.net
+  customer-app1:
+    hostname: app1.managed.example.net
     user: root
     depends_on:
-      setup:
-        condition: service_completed_successfully
+      provision-borker:
+        condition: service_started
     volumes:
-      - customer-nats1:/etc/saas-manager/
+      - customer-app1:/etc/saas-manager/
     build:
       context: agent
       dockerfile: Dockerfile
 
-  customer-nats2:
-    hostname: nats2.managed.example.net
+  customer-app2:
+    hostname: app2.managed.example.net
     user: root
     depends_on:
-      setup:
-        condition: service_completed_successfully
+      provision-borker:
+        condition: service_started
     volumes:
-      - customer-nats2:/etc/saas-manager/
+      - customer-app2:/etc/saas-manager/
     build:
       context: agent
       dockerfile: Dockerfile
 
-  customer-nats3:
-    hostname: nats3.managed.example.net
+  customer-app3:
+    hostname: app3.managed.example.net
     user: root
     depends_on:
-      setup:
-        condition: service_completed_successfully
+      provision-borker:
+        condition: service_started
     volumes:
-      - customer-nats3:/etc/saas-manager/
+      - customer-app3:/etc/saas-manager/
     build:
       context: agent
       dockerfile: Dockerfile
@@ -150,7 +193,8 @@ volumes:
   provisioner:
   broker:
   customer-tools:
-  customer-nats1:
-  customer-nats2:
-  customer-nats3:
+  customer-app1:
+  customer-app2:
+  customer-app3:
   saas-nats:
+  redpanda:

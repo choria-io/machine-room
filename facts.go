@@ -92,6 +92,7 @@ func machineRoomFactProvider(opts Options, log *logrus.Entry) model.FactProvider
 		}
 
 		f := map[string]any{
+			"identity":          opts.Identity,
 			"timestamp":         time.Now(),
 			"timestamp_seconds": time.Now().Unix(),
 			"server": map[string]any{
