@@ -191,9 +191,7 @@ func FileExist(path string) bool {
 		return false
 	}
 
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return false
-	}
+	_, err := os.Stat(path)
 
-	return true
+	return !os.IsNotExist(err)
 }
