@@ -6,12 +6,12 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/choria-io/ccm v0.0.21-0.20260323121159-003c6b538da2
 	github.com/choria-io/fisk v0.8.0
-	github.com/choria-io/go-choria v0.29.5-0.20260325094417-67e6728d9102
+	github.com/choria-io/go-choria v0.29.5-0.20260325211606-a183bc40735b
 	github.com/choria-io/stream-replicator v0.9.0
 	github.com/choria-io/tokens v0.0.4-0.20250903080437-7d289cbf3db9
 	github.com/ghodss/yaml v1.0.0
 	github.com/nats-io/jwt/v2 v2.8.1
-	github.com/nats-io/nats.go v1.49.0
+	github.com/nats-io/nats.go v1.50.0
 	github.com/nats-io/nkeys v0.4.15
 	github.com/sirupsen/logrus v1.9.4
 )
@@ -102,9 +102,9 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nats-io/jsm.go v0.3.1-0.20260311160413-8208434e7b0d // indirect
+	github.com/nats-io/jsm.go v0.3.1-0.20260325211011-562dfe8b7c05 // indirect
 	github.com/nats-io/nats-server/v2 v2.12.6 // indirect
-	github.com/nats-io/natscli v0.3.2-0.20260324111610-3c97108646e9 // indirect
+	github.com/nats-io/natscli v0.3.2-0.20260325111417-afd640576c9a // indirect
 	github.com/nats-io/nsc/v2 v2.12.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/nsf/termbox-go v1.1.1 // indirect
