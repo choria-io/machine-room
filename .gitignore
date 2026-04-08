@@ -1,4 +1,5 @@
 .idea
+.DS_Store
 docs/public
 .claude
 CLAUDE.md

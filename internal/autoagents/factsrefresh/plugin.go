@@ -42,9 +42,10 @@ func Register(cmdPath string, version string, interval time.Duration, cfgFile st
 				Interval:   interval.String(),
 				StateMatch: []string{"GATHER"},
 				Properties: map[string]any{
-					"command":              fmt.Sprintf("%s facts --config %s", cmdPath, cfgFile),
-					"timeout":              "1m",
-					"gather_initial_state": "true",
+					"command":                   fmt.Sprintf("%s facts --config %s", cmdPath, cfgFile),
+					"timeout":                   "1m",
+					"gather_initial_state":      "true",
+					"suppress_success_announce": "true",
 				},
 			},
 		},
